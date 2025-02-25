@@ -28,17 +28,45 @@ SELECT TOP 1000 * FROM bronze.erp_loc_a101;
 
 
 
+-- ====================================================================
+-- Checking 'bronze.crm_sales_details'
+-- ====================================================================
+-- Check for Invalid Dates
+-- Expectation: No Invalid Dates
+SELECT 
+    NULLIF(sls_due_dt, 0) AS sls_due_dt 
+FROM bronze.crm_sales_details
+WHERE sls_due_dt <= 0 
+    OR LEN(sls_due_dt) != 8 
+    OR sls_due_dt > 20500101 
+    OR sls_due_dt < 19000101;
+
+-- Check for Invalid Date Orders (Order Date > Shipping/Due Dates)
+-- Expectation: No Results
+SELECT 
+    * 
+FROM bronze.crm_sales_details
+WHERE sls_order_dt > sls_ship_dt 
+   OR sls_order_dt > sls_due_dt;
+
+-- Check Data Consistency: Sales = Quantity * Price
+-- Expectation: No Results
+SELECT DISTINCT 
+    sls_sales,
+    sls_quantity,
+    sls_price 
+FROM bronze.crm_sales_details
+WHERE sls_sales != sls_quantity * sls_price
+   OR sls_sales IS NULL 
+   OR sls_quantity IS NULL 
+   OR sls_price IS NULL
+   OR sls_sales <= 0 
+   OR sls_quantity <= 0 
+   OR sls_price <= 0
+ORDER BY sls_sales, sls_quantity, sls_price;
 
 
-
-
-
-
-
-
-
-
-
-SELECT
-TRIM(prd_nm) AS prd_nm
-FROM bronze.crm_prd_info
+SELECT 
+cid,
+cntry
+FROM bronze.erp_loc_a101;
