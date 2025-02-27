@@ -1,0 +1,6 @@
+-- JOIN Tables
+-- CHECK Duplicates after each join table 
+-- data conflict resolution or sometimes data reconciliation
+-- Rename my columns to a friendly reading
+-- create primary key for dimention tables 
+--- ensure Data lookup if i am building dimensions and fact table 

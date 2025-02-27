@@ -1,8 +1,3 @@
---- FOR DUPLICATES THERE ARE 3 METHODES TO CHOSE ONE RAW
-    --- 1) Use a Timestamp or Version Field (choose the most recent record)
-    --- 2) Evaluate Data Completeness (fewer null values or correct data in critical columns)
-    --- 3) Business Logic Requirements (use the record that has been verified or marked as primary by your application logic)
-
 /*
 ===============================================================================
 Stored Procedure: Load Silver Layer (Bronze -> Silver)
@@ -22,6 +17,9 @@ Usage Example:
     EXEC Silver.load_silver;
 ===============================================================================
 */
+
+USE DataWarehouse;
+GO
 
 CREATE OR ALTER PROCEDURE silver.load_silver AS
 BEGIN
@@ -116,8 +114,6 @@ BEGIN
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
 
-        PRINT CHAR(13) + CHAR(10) + CHAR(13) + CHAR(10); -- Print new line
-
         -- Loading crm_sales_details
         SET @start_time = GETDATE();
 		PRINT '>> Truncating Table: silver.crm_sales_details';
@@ -165,14 +161,8 @@ BEGIN
         SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
-        PRINT CHAR(13) + CHAR(10) + CHAR(13) + CHAR(10); -- Print new line
-        PRINT CHAR(13) + CHAR(10) + CHAR(13) + CHAR(10); -- Print new line
 
-		PRINT '------------------------------------------------';
-		PRINT 'Loading ERP Tables';
-		PRINT '------------------------------------------------';
-
-         -- Loading erp_cust_az12
+        -- Loading erp_cust_az12
         SET @start_time = GETDATE();
 		PRINT '>> Truncating Table: silver.erp_cust_az12';
 		TRUNCATE TABLE silver.erp_cust_az12;
@@ -192,15 +182,18 @@ BEGIN
 				ELSE bdate
 			END AS bdate, -- Set future birthdates to NULL
 			CASE
-				WHEN UPPER(TRIM(gen)) IN ('F', 'FEMALE') THEN 'Female'
-				WHEN UPPER(TRIM(gen)) IN ('M', 'MALE') THEN 'Male'
+				WHEN UPPER(TRIM(REPLACE(gen, CHAR(13), ''))) IN ('F', 'FEMALE') THEN 'Female'
+				WHEN UPPER(TRIM(REPLACE(gen, CHAR(13), ''))) IN ('M', 'MALE') THEN 'Male'
 				ELSE 'n/a'
 			END AS gen -- Normalize gender values and handle unknown cases
 		FROM bronze.erp_cust_az12;
 	    SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
-        PRINT CHAR(13) + CHAR(10) + CHAR(13) + CHAR(10); -- Print new line
+
+		PRINT '------------------------------------------------';
+		PRINT 'Loading ERP Tables';
+		PRINT '------------------------------------------------';
 
         -- Loading erp_loc_a101
         SET @start_time = GETDATE();
@@ -214,16 +207,15 @@ BEGIN
 		SELECT
 			REPLACE(cid, '-', '') AS cid, 
 			CASE
-				WHEN TRIM(cntry) = 'DE' THEN 'Germany'
-				WHEN TRIM(cntry) IN ('US', 'USA') THEN 'United States'
-				WHEN TRIM(cntry) = '' OR cntry IS NULL THEN 'n/a'
-				ELSE TRIM(cntry)
+				WHEN TRIM(REPLACE(cntry, CHAR(13), '')) = 'DE' THEN 'Germany'
+				WHEN TRIM(REPLACE(cntry, CHAR(13), '')) IN ('US', 'USA') THEN 'United States'
+				WHEN TRIM(REPLACE(cntry, CHAR(13), '')) = '' OR cntry IS NULL THEN 'n/a'
+				ELSE TRIM(REPLACE(cntry, CHAR(13), ''))
 			END AS cntry -- Normalize and Handle missing or blank country codes
 		FROM bronze.erp_loc_a101;
 	    SET @end_time = GETDATE();
         PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
-        PRINT CHAR(13) + CHAR(10) + CHAR(13) + CHAR(10); -- Print new line
 		
 		-- Loading erp_px_cat_g1v2
 		SET @start_time = GETDATE();
@@ -240,13 +232,15 @@ BEGIN
 			id,
 			cat,
 			subcat,
-			maintenance
+			CASE
+				WHEN UPPER(TRIM(REPLACE(maintenance, CHAR(13), ''))) = 'YES' THEN 'Yes'
+				WHEN UPPER(TRIM(REPLACE(maintenance, CHAR(13), ''))) = 'NO' THEN 'No'
+				ELSE maintenance
+			END AS maintenance
 		FROM bronze.erp_px_cat_g1v2;
 		SET @end_time = GETDATE();
 		PRINT '>> Load Duration: ' + CAST(DATEDIFF(SECOND, @start_time, @end_time) AS NVARCHAR) + ' seconds';
         PRINT '>> -------------';
-        PRINT CHAR(13) + CHAR(10) + CHAR(13) + CHAR(10); -- Print new line
-        PRINT CHAR(13) + CHAR(10) + CHAR(13) + CHAR(10); -- Print new line
 
 		SET @batch_end_time = GETDATE();
 		PRINT '=========================================='

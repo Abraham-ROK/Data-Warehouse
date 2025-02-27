@@ -1,7 +1,8 @@
 -- Data Quality Checks for Data Warehouse
 -- -------------------------------------------------
 -- 1) CHECK Duplicates
--- 2) CHECK Unwanted Space
+-- 2) CHECK Unwanted Space or unwanted character 
+--  --- ex:like '\r' at the end of of my row (using json can help me see this character)
 -- 3) Standardise the Data and Make It Consistent
 --    e.g., Convert text to a uniform case (UPPER/LOWER) and trim extra spaces
 -- 4) Extract CHARACTER into a New Column

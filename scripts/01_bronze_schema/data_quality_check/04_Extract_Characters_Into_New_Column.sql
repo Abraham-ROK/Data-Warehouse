@@ -33,3 +33,13 @@ SELECT
     bdate,
     gen
 FROM bronze.erp_cust_az12;
+
+-- this removes specificaly '\r' characters
+SELECT
+  gen,
+  CASE
+    WHEN UPPER(TRIM(REPLACE(gen, CHAR(13), ''))) IN ('F', 'FEMALE') THEN 'Female'
+    WHEN UPPER(TRIM(REPLACE(gen, CHAR(13), ''))) IN ('M', 'MALE') THEN 'Male'
+    ELSE 'n/a'
+  END AS n_gen -- Normalize gender values and handle unknown cases
+FROM bronze.erp_cust_az12;
