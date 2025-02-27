@@ -1,0 +1,26 @@
+
++> Executing a stored procedure multiple times when the underlying data hasn't changed
+    Efficiency:
+        It might be beneficial to add logic that checks whether data has changed before executing the procedure. 
+        This can be done by comparing timestamps, row counts, checksums, or other indicators that signal changes.
+
++> add ctrl Y to vscode
+
++> questions to ask
+     1=> Should i alway build Idempotence stored procedure?
+     2=> how to build an Idempotent stored procedure?
+     3=> i have the choice between all of this (INNER, LEFT, RIGHT, FULL), 
+         witch one can i consider if i always want to keep all my rows even if there is no match?
+     4=> Review indexes
+     5=> what are the drawbacks of using windows functions?
+            give me some examples for this abd and what solution can i use in those cases
+                Query Plan and Optimization:
+                Potential for Overuse:
+                Complexity:
+                Memory Usage:
+     6=> what is primary key and surrogate key 
+     7=> Transaction
+     8=> Why use 'VIEW' for the gold layer?
+     9=>
+     10=>
+
