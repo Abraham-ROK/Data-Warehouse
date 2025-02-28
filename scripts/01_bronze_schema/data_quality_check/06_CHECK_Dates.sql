@@ -84,3 +84,34 @@ SELECT
   END AS bdate, -- Set future birthdates to NULL
   gen
 FROM bronze.erp_cust_az12;
+
+
+-- calculate the percentage of rows impacted 
+-- by unwanted space 
+
+-- Unique rows affected: overlap for total pourcentage
+-- Since some rows are counted in both conditions, you must account for overlap.
+-- Total unique impacted rows = 8 (first name) + 10 (last name) − 4 (both) = 14.
+-- Then the calculation becomes:
+-- TotalPercentageImpacted = (14 / 100) * 100.0 = 14.0%
+
+-- First, get the total number of rows in the table
+-- NOTE TO ME THIS '<>' is used as the "not equal to" operator.
+
+WITH TotalRows AS (
+    SELECT COUNT(*) AS TotalCount
+    FROM bronze.erp_cust_az12
+)
+SELECT 
+    -- Calculate percentage of rows with unwanted spaces in the first name
+    CAST(
+        ROUND(
+            COUNT(
+                CASE WHEN bdate > GETDATE()
+                     THEN 1 END
+                ) * 100.0 / MAX(tr.TotalCount),3
+                    ) AS DECIMAL(10,3)
+                        ) AS PercentageImpacted_futur_date
+
+FROM bronze.erp_cust_az12
+CROSS JOIN TotalRows tr;

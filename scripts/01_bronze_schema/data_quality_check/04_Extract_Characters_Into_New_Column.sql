@@ -11,7 +11,7 @@ prd_key,
 -- Extract category ID starting from the 1st characters till the 5th
 REPLACE(SUBSTRING(prd_key, 1, 5), '-', '_') AS cat_id,
 -- Extract product key starting from the 7th characters and use LEN() for the rest of the caractere
-SUBSTRING(prd_key, 7, LEN(prd_key)) AS prd_key
+SUBSTRING(prd_key, 7, LEN(prd_key)) AS new_prd_key
 FROM bronze.crm_prd_info
 
 -- remove characters

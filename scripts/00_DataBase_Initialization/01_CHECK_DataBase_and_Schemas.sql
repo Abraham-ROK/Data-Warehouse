@@ -8,7 +8,7 @@ FROM sys.databases
 WHERE name = 'DataWarehouse';
 GO
 
--- Work on the database i have created 
+-- Work on the database created 
 
 USE DataWarehouse;
 GO

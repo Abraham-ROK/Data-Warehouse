@@ -1,35 +1,34 @@
-# Data-Warehouse
+# Data Warehouse Initialization Documentation
 
+## Overview
 
-## 🚀 Project Requirements
+This document outlines the steps required to initialize the data warehouse. The process involves creating a dedicated database and setting up three schemas—Bronze, Silver, and Gold—for handling data at different processing stages.
 
-#### Objective 1
-Develop a modern data warehouse using SQL Server to consolidate sales data, enabling analytical reporting and informed decision-making.
+## Objectives
 
-#### Specifications
-- **Data Sources**: Import data from two source systems (ERP and CRM) provided as CSV files.
-- **Data Quality**: Clean and resolve data quality issues prior to analysis.
-- **Integration**: Combine both sources into a single, user-friendly data model designed for analytical queries.
-- **Scope**: Focus on the latest dataset only; historization of data is not required.
-- **Documentation**: Provide clear documentation of the data model to support both business stakeholders and analytics teams.
+- **Database Creation:** Create a database named `datawarehouse`.
+- **Schema Setup:** Within the database, create the following schemas:
+  - **Bronze:** For raw, ingested data.
+  - **Silver:** For cleaned and integrated data.
+  - **Gold:** For curated data ready for analysis.
+- **Verification:** Ensure that the database and all schemas are successfully created and operational.
 
----
+## Steps to Initialize the Data Warehouse
 
-#### Objective 2
-Develop SQL-based analytics to deliver detailed insights into:
-- **Customer Behavior**
-- **Product Performance**
-- **Sales Trends**
+### 1. Create the Database and its Schemas
 
-These insights empower stakeholders with key business metrics, enabling strategic decision-making. 
+- **Step 1:** Run the [00.sql](01_bronze_schema/00.sql) file.
+- **Step 2:** Run the [01.sql](01_bronze_schema/01.sql) file to verify that everything has been created correctly.
 
----
-### References
+## Post-Initialization Steps
 
-I am learning from => [DataWithBaraa][project-def]
+After the initial setup, proceed with the following:
 
-If you want to watch his video [Youtube][youtube-def]
+- **Data Ingestion:** Start loading raw data into the Bronze schema.
+- **Data Transformation:** Apply cleaning and integration routines to move data from Bronze to Silver.
+- **Data Curation:** Finalize data processing by populating the Gold schema.
+- **Monitoring:** Implement monitoring and testing to ensure data flows correctly and integrity is maintained.
 
+## Conclusion
 
-[youtube-def]: https://www.youtube.com/watch?v=9GVqKuTVANE&ab_channel=DatawithBaraa
-[project-def]: https://github.com/DataWithBaraa/sql-data-warehouse-project
+Following these steps will establish a solid foundation for your data warehouse, providing a clear separation between raw data, processed data, and curated data. This layered approach supports scalable data management and prepares the system for further development and production workloads.

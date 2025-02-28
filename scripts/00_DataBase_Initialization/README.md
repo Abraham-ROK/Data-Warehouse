@@ -17,5 +17,5 @@ This document outlines the steps required to initialize the data warehouse. The 
 
 ### 1. Create the Database and its Schemas
 
- - **Step 1:** Run the [database init](./00_init_dw_db.sql) file.
+- **Step 1:** Run the [database init](./00_init_dw_db.sql) file.
 - **Step 2:** Run the [creation](./01_CHECK_DataBase_and_Schemas.sql) file to verify that everything has been created correctly.

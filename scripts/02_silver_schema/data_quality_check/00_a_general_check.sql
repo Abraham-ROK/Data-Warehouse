@@ -1,5 +1,6 @@
 -- Data Quality Checks for Data Warehouse
 -- -------------------------------------------------
+-- 0) Check if if have some data in  my schema and if they are in the right colums 
 -- 1) CHECK Duplicates
 -- 2) CHECK Unwanted Space or unwanted character 
 --  --- ex:like '\r' at the end of of my row (using json can help me see this character)
